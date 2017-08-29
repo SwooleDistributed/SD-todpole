@@ -1,11 +1,9 @@
 <?php
 namespace app;
 
-use Server\Asyn\HttpClient\HttpClientPool;
-use Server\Asyn\Redis\RedisAsynPool;
-use Server\Asyn\TcpClient\SdTcpRpcPool;
+use Server\CoreBase\HttpInput;
+use Server\CoreBase\Loader;
 use Server\SwooleDistributedServer;
-use Server\SwooleServer;
 
 /**
  * Created by PhpStorm.
@@ -16,26 +14,22 @@ use Server\SwooleServer;
 class AppServer extends SwooleDistributedServer
 {
     /**
+     * 可以在这里自定义Loader，但必须是ILoader接口
+     * AppServer constructor.
+     */
+    public function __construct()
+    {
+        $this->setLoader(new Loader());
+        parent::__construct();
+    }
+
+    /**
      * 开服初始化(支持协程)
      * @return mixed
      */
     public function onOpenServiceInitialization()
     {
         yield parent::onOpenServiceInitialization();
-        if(version_compare(SwooleServer::version, '2.1.3') < 0){
-            var_dump("请使用2.1.3版本");
-        }
-    }
-
-    /**
-     * ws开始连接
-     * @param $server
-     * @param $request
-     */
-    public function onSwooleWSOpen($server, $request)
-    {
-        //转发到控制器处理
-        $this->onSwooleWSAllMessage($server,$request->fd,$this->pack->pack(['type' => 'connect']));
     }
 
     /**
@@ -56,11 +50,35 @@ class AppServer extends SwooleDistributedServer
     public function initAsynPools($workerId)
     {
         parent::initAsynPools($workerId);
-        //都是测试的，实际应用中可以删除
-        $this->addAsynPool('DingDingRest', new HttpClientPool($this->config, $this->config->get('dingding.url')));
-        $this->addAsynPool('RPC', new SdTcpRpcPool($this->config, 'test', "192.168.8.48:9093"));
-        $this->addAsynPool('redis_local2', new RedisAsynPool($this->config, "local2"));
-        //redis根据key进行自动路由
-        //RedisRoute::getInstance()->addRedisPoolRoute('testroute', 'redis_local2');
+    }
+
+    /**
+     * ws开始连接
+     * @param $server
+     * @param $request
+     */
+    public function onSwooleWSOpen($server, $request)
+    {
+        //转发到控制器处理
+        $this->onSwooleWSAllMessage($server,$request->fd,'{"type":"connect"}');
+    }
+
+    /**
+     * 用户进程
+     */
+    public function startProcess()
+    {
+        parent::startProcess();
+        //ProcessManager::getInstance()->addProcess(MyProcess::class);
+    }
+
+    /**
+     * 可以在这验证WebSocket连接,return true代表可以握手，false代表拒绝
+     * @param HttpInput $httpInput
+     * @return bool
+     */
+    public function onWebSocketHandCheck(HttpInput $httpInput)
+    {
+        return true;
     }
 }

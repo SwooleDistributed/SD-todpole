@@ -20,7 +20,7 @@ class Action extends Controller
     public function connect()
     {
         $uid = time();
-        $this->bindUid($this->fd, $uid);
+        $this->bindUid($uid);
         $this->send(['type' => 'welcome', 'id' => $uid]);
     }
 

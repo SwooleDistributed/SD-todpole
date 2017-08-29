@@ -68,4 +68,9 @@ class MyRoute implements IRoute
     {
         return $this->client_data->params??null;
     }
+
+    public function errorHandle($e, $fd)
+    {
+        //get_instance()->close($fd);
+    }
 }

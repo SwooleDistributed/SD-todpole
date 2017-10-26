@@ -56,4 +56,13 @@ class Action extends Controller
         );
     }
 
+    public function onClose()
+    {
+        $this->destroy();
+    }
+
+    public function onConnect()
+    {
+        $this->destroy();
+    }
 }

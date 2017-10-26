@@ -1,6 +1,6 @@
 {
   "require": {
-    "tmtbe/swooledistributed":">2.0.0"
+    "tmtbe/swooledistributed":"=2.6.4"
   },
  "autoload": {
     "psr-4": {

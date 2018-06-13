@@ -10,7 +10,7 @@
  * 服务器设置
  */
 $config['name'] = 'SWD';
-$config['server']['send_use_task_num'] = 20;
+$config['server']['send_use_task_num'] = 500;
 $config['server']['set'] = [
     'log_file' => LOG_DIR."/swoole.log",
     'pid_file' => PID_DIR . '/server.pid',
@@ -19,6 +19,7 @@ $config['server']['set'] = [
     'worker_num' => 4,    //worker process num
     'backlog' => 128,   //listen backlog
     'open_tcp_nodelay' => 1,
+    'socket_buffer_size' => 1024 * 1024 * 1024,
     'dispatch_mode' => 2,
     'task_worker_num' => 5,
     'task_max_request' => 5000,
@@ -31,8 +32,10 @@ $config['server']['set'] = [
 $config['coroution']['timerOut'] = 5000;
 
 //是否启用自动reload
-$config['auto_reload_enable'] = true;
+$config['auto_reload_enable'] = false;
 
 //是否允许访问Server中的Controller，如果不允许将禁止调用Server包中的Controller
 $config['allow_ServerController'] = true;
+//是否允许监控流量数据
+$config['allow_MonitorFlowData'] = true;
 return $config;

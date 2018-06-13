@@ -17,7 +17,10 @@ class Action extends Controller
         parent::initialization($controller_name, $method_name);
     }
 
-    public function connect()
+    /**
+     * @throws \Exception
+     */
+    public function onConnect()
     {
         $uid = time();
         $this->bindUid($uid);
@@ -29,6 +32,9 @@ class Action extends Controller
 
     }
 
+    /**
+     * @throws \Server\CoreBase\SwooleException
+     */
     public function update()
     {
         $this->sendToAll(
@@ -45,6 +51,9 @@ class Action extends Controller
             ]);
     }
 
+    /**
+     * @throws \Server\CoreBase\SwooleException
+     */
     public function message()
     {
         $this->sendToAll(
@@ -58,11 +67,6 @@ class Action extends Controller
 
     public function onClose()
     {
-        $this->destroy();
-    }
 
-    public function onConnect()
-    {
-        $this->destroy();
     }
 }

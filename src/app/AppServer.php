@@ -16,6 +16,7 @@ class AppServer extends SwooleDistributedServer
     /**
      * 可以在这里自定义Loader，但必须是ILoader接口
      * AppServer constructor.
+     * @throws \Noodlehaus\Exception\EmptyDirectoryException
      */
     public function __construct()
     {
@@ -36,6 +37,7 @@ class AppServer extends SwooleDistributedServer
      * 这里可以进行额外的异步连接池，比如另一组redis/mysql连接
      * @param $workerId
      * @return array
+     * @throws \Server\CoreBase\SwooleException
      */
     public function initAsynPools($workerId)
     {
@@ -43,18 +45,8 @@ class AppServer extends SwooleDistributedServer
     }
 
     /**
-     * ws开始连接
-     * @param $server
-     * @param $request
-     */
-    public function onSwooleWSOpen($server, $request)
-    {
-        //转发到控制器处理
-        $this->onSwooleWSAllMessage($server,$request->fd,'{"type":"connect"}');
-    }
-
-    /**
      * 用户进程
+     * @throws \Exception
      */
     public function startProcess()
     {

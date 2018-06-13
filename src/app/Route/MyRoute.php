@@ -69,12 +69,12 @@ class MyRoute implements IRoute
         return $this->client_data->params??null;
     }
 
-    public function errorHandle(\Exception $e, $fd)
+    public function errorHandle(\Throwable $e, $fd)
     {
         //get_instance()->close($fd);
     }
 
-    public function errorHttpHandle(\Exception $e, $request, $response)
+    public function errorHttpHandle(\Throwable $e, $request, $response)
     {
         // TODO: Implement errorHttpHandle() method.
     }
